@@ -1,0 +1,21 @@
+server:
+  port: 8084
+
+token: 123SINGLE56
+
+jwt.secret: mysecret
+jwt.expiration: 7200000
+redis.expiration: 2
+redis.key: session_user
+
+spring:
+  application:
+    name: merchant-service
+  data:
+    mongodb:
+      uri: mongodb://localhost:27018/authorization
+  chache:
+    type: redis
+  redis:
+    host: localhost
+    port: 6379

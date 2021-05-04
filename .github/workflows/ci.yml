@@ -24,7 +24,7 @@ jobs:
         - name: Run unit tests
           run: mvn test
         - name: Run coverage 
-        - run: mvn -B verify -P coverage --no-transfer-progress
+          run: mvn -B verify -P coverage --no-transfer-progress
         - uses: codecov/codecov-action@v1
           with:
             file: ./**/target/site/jacoco/jacoco.xml

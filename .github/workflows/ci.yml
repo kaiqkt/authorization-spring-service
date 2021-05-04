@@ -46,7 +46,7 @@ jobs:
         - name: Push on Docker Hub
           uses: mr-smithers-excellent/docker-build-push@v4
           with:
-            image: nanajanashia/demo-app
+            image: onlyzedsafasdfa/auth-service
             registry: docker.io
             username: ${{ secrets.DOCKER_USERNAME }}
             password: ${{ secrets.DOCKER_PASSWORD }}

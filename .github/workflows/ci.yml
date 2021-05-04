@@ -41,7 +41,9 @@ jobs:
           with:
             java-version: '11'
             distribution: 'adopt'
-        - name: Build with Maven
-          run: mvn -B package --file pom.xml -Dmaven.test.skip=true
+        - name: Build with Maven and Publish SNAPSHOT
+          run: mvn -B package --file pom.xml -Dmaven.test.skip=true --no-transfer-progress deploy
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     

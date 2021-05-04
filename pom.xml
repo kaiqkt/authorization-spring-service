@@ -143,7 +143,19 @@
 <!--			</dependency>-->
 <!--		</dependencies>-->
 <!--	</dependencyManagement>-->
-
+	<!-- Github packages -->
+	<distributionManagement>
+	    <repository>
+		<id>oss.sonatype.org</id>
+		<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+	    </repository>
+	    <snapshotRepository>
+		<id>github</id>
+		<name>GitHub Packages</name>
+		<url>https://maven.pkg.github.com/kaiqkt/authorization-service</url>
+	    </snapshotRepository>
+	</distributionManagement>
+	
 	<build>
 		<sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
 		<testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>

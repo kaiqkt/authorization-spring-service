@@ -1,25 +1,18 @@
-spring:
-  profiles:
-    active:
-    - test
-
----
 token: 123SINGLE56
 
 jwt.secret: mysecret
 jwt.expiration: 7200000
 
 spring:
-  profiles: prod
   application:
     name: merchant-service
   data:
     mongodb:
-      uri: ${MONGODB_URI}
+      uri: mongodb://localhost:27017/authorization
 
 redis:
-  host: ${REDIS_HOST}
-  port: ${REDIS_PORT}
-  password: ${REDIS_PASSWORD}
+  host: localhost
+  port: 6379
+  password:
   key: session_user
   expiration: 2

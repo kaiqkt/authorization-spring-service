@@ -39,10 +39,14 @@ jobs:
             java-version: '11'
         - name: run build
           run: mvn -B package --file pom.xml -Dmaven.test.skip=true
-        - name: push on docker hub
-          uses: mr-smithers-excellent/docker-build-push@v4
+            
+    deploy:
+      needs: build
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - uses: akhileshns/heroku-deploy@v3.12.12
           with:
-            image: onlyzedsafasdfa/auth-service
-            registry: docker.io
-            username: ${{ secrets.DOCKER_USERNAME }}
-            password: ${{ secrets.DOCKER_PASSWORD }}
+            heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+            heroku_app_name:  ${{secrets.HEROKU_APP_NAME}}
+            heroku_email: ${{secrets.HEROKU_EMAIL}}

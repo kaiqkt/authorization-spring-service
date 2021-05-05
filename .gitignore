@@ -11,4 +11,4 @@ target/
 *.ipr
 
 ## PROD ENV ##
-application.yml
+!**/src/main/resources/application.yml

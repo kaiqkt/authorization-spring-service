@@ -50,3 +50,8 @@ jobs:
             heroku_api_key: ${{secrets.HEROKU_API_KEY}}
             heroku_app_name:  ${{secrets.HEROKU_APP_NAME}}
             heroku_email: ${{secrets.HEROKU_EMAIL}}
+      env:
+        MONGODB_URI: ${{secrets.MONGODB_URI}}
+        REDIS_HOST: ${{secrets.REDIS_HOST}}
+        REDIS_PORT: ${{secrets.REDIS_PORT}}
+        REDIS_PASSWORD: ${{secrets.REDIS_PASSWORD}}

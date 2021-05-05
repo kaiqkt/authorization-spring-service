@@ -21,6 +21,7 @@ import javax.servlet.FilterChain
 import javax.servlet.ServletException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import kotlin.math.log
 
 class AuthenticationFilter(
     jwtUtil: JWTUtil,
@@ -77,7 +78,7 @@ class AuthenticationFilter(
             expiration = expiration.toLong(),
             timeUnit = TimeUnit.HOURS
         )
-
+        logger.info(sessionUser.ip)
         redisRepository.createSession(sessionUser)
     }
 

@@ -78,7 +78,6 @@ class AuthenticationFilter(
             expiration = expiration.toLong(),
             timeUnit = TimeUnit.HOURS
         )
-        logger.info(sessionUser.ip)
         redisRepository.createSession(sessionUser)
     }
 

@@ -8,9 +8,7 @@ object UserRequestFactory {
         personId = "123456",
         email = "test@test.com",
         password = "@Test255",
-        countryCode = PhoneFactory.sample().countryCode,
-        areaCode = PhoneFactory.sample().areaCode,
-        phoneNumber = PhoneFactory.sample().number
+        phone = PhoneRequestFactory.sample()
     )
 
 }

@@ -3,7 +3,7 @@ package authorizationservice.application.validation
 import authorizationservice.domain.exceptions.ResultBindingException
 import org.springframework.validation.BindingResult
 
-object JsonValidator {
+object RequestValidator {
     fun validate(result: BindingResult){
         val errors = mutableListOf<String>()
 

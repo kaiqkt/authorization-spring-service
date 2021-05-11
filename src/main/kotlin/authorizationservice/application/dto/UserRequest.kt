@@ -1,8 +1,9 @@
 package authorizationservice.application.dto
 
-import authorizationservice.domain.entities.Phone
 import authorizationservice.domain.entities.User
+import javax.validation.Valid
 import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 
 data class UserRequest(
@@ -13,28 +14,16 @@ data class UserRequest(
     @get:NotEmpty(message = "Password cannot be empty.")
     @get:Pattern(regexp = "^(?=.*[A-Z].*[A-Z])(?=.*[!@#\$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}\$", message = "Wrong password required")
     val password: String = "",
-    @get:NotEmpty(message = "Country Code cannot be empty.")
-    @get:Pattern(regexp = "\\+?[0-9]{2}", message = "Country code invalid")
-    val countryCode: String = "",
-    @get:NotEmpty(message = "Area Code cannot be empty.")
-    @get:Pattern(regexp = "[0-9]{2}", message = "Area code invalid")
-    val areaCode: String = "",
-    @get:NotEmpty(message = "Phone Number cannot be empty.")
-    @get:Pattern(regexp = "[0-9]{9}", message = "Number invalid")
-    val phoneNumber: String = ""
+    @get:NotNull(message = "Phone cannot be null.")
+    @get:Valid
+    val phone: PhoneRequest
 )
 
 fun UserRequest.toDomain() = User(
     personId = this.personId,
     email = this.email,
     password = this.password,
-    phone = this.toPhone()
-)
-
-fun UserRequest.toPhone() = Phone(
-    countryCode = this.countryCode,
-    areaCode = this.areaCode,
-    number = this.phoneNumber
+    phone = this.phone.toDomain()
 )
 
 //^                         Start anchor

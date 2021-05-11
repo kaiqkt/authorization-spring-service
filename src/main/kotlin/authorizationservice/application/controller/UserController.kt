@@ -16,10 +16,11 @@ import javax.validation.Valid
 class UserController(private val userService: UserService) {
 
     @PostMapping
-    fun register(@Valid @RequestBody user: UserRequest, result: BindingResult): ResponseEntity<User>{
+    fun register(@Valid @RequestBody user: UserRequest, result: BindingResult): ResponseEntity<HttpStatus>{
         RequestValidator.validate(result)
+        userService.create(user.toDomain())
 
-        return ResponseEntity<User>(userService.create(user.toDomain()), HttpStatus.CREATED)
+        return ResponseEntity(HttpStatus.CREATED)
     }
 
     @DeleteMapping

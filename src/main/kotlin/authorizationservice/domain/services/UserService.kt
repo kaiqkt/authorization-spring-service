@@ -36,10 +36,8 @@ class UserService(
         logger.info("User[${newUser._id}] created in the mongo database")
     }
 
-    fun deleteSession() {
-        val user = userRepository.findByEmail(authenticated()?.username)
-
-        redisSessionRepository.deleteSession(user?._id)
+    fun deleteSession() = userRepository.findByEmail(authenticated()?.username).let {
+        redisSessionRepository.deleteSession(it?._id)
     }
 
     private fun authenticated(): UserDetailsImpl? {

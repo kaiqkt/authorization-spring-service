@@ -16,16 +16,12 @@ import java.time.LocalDateTime
 @ControllerAdvice
 class ErrorHandler : ResponseEntityExceptionHandler() {
 
-    private companion object
-
-    val logger: Logger = LoggerFactory.getLogger(ErrorHandler::class.java.name)
-
     @ExceptionHandler(ResultBindingException::class)
     fun handleResultBindingException(
         ex: ResultBindingException, request: WebRequest
     ): ResponseEntity<Any> {
         val uri: List<String> = request.getDescription(true).split(";")
-        logger.error("result binding exception error: $uri")
+        logger.error("invalid dto: $uri")
 
         val body: MutableMap<String, Any> = LinkedHashMap()
         body["timestamp"] = LocalDateTime.now()
@@ -38,7 +34,7 @@ class ErrorHandler : ResponseEntityExceptionHandler() {
         ex: DataValidationException, request: WebRequest
     ): ResponseEntity<Any> {
         val uri: List<String> = request.getDescription(true).split(";")
-        logger.error("data validation exception error: $uri")
+        logger.error("data already used: $uri")
 
         val body: MutableMap<String, Any> = LinkedHashMap()
         body["timestamp"] = LocalDateTime.now()
@@ -51,7 +47,7 @@ class ErrorHandler : ResponseEntityExceptionHandler() {
         ex: UsernameNotFoundException, request: WebRequest
     ): ResponseEntity<Any> {
         val uri: List<String> = request.getDescription(true).split(";")
-        logger.error("username not found exception error: $uri")
+        logger.error("username not found: $uri")
 
         val body: MutableMap<String, Any> = LinkedHashMap()
         body["timestamp"] = LocalDateTime.now()

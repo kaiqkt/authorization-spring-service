@@ -11,6 +11,11 @@ import org.slf4j.LoggerFactory
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
+
+private const val EMAIL_ERROR_MESSAGE = "The following email is already being used:"
+private const val PERSON_ID_ERROR_MESSAGE = "The following personId is already being used:"
+private const val PHONE_ERROR_MESSAGE = "The following phone is already being used:"
 
 @Service
 class UserService(
@@ -19,27 +24,20 @@ class UserService(
     private val bCryptPasswordEncoder: BCryptPasswordEncoder
 ) {
 
-    private companion object {
-        val logger: Logger = LoggerFactory.getLogger(UserService::class.java)
-    }
+    private val logger = LoggerFactory.getLogger(javaClass)
 
-    fun create(user: User): User {
+    fun create(user: User) {
         validateDate(user)
 
-        logger.info("Creating user")
-
         user.password = bCryptPasswordEncoder.encode(user.password)
-
+        user.createdAt = LocalDateTime.now()
         val newUser = userRepository.save(user)
-        logger.info("User[${newUser._id}] with mongo database created")
 
-        return newUser
+        logger.info("User[${newUser._id}] created in the mongo database")
     }
 
-    fun deleteSession() {
-        val user = userRepository.findByEmail(authenticated()?.username)
-
-        redisSessionRepository.deleteSession(user?._id)
+    fun deleteSession() = userRepository.findByEmail(authenticated()?.username).let {
+        redisSessionRepository.deleteSession(it?._id)
     }
 
     private fun authenticated(): UserDetailsImpl? {
@@ -53,28 +51,12 @@ class UserService(
     private fun validateDate(user: User) {
         val error = mutableListOf<String>()
 
-        user.personId.let {
-            if (userRepository.existsByPersonId(it)) {
-                error.add("PersonId: $it already use")
-            }
-        }
-        user.email.let {
-            if (userRepository.existsByEmail(it)) {
-                error.add("Email: $it already use")
-            }
-        }
-        user.phone.let {
-            if (userRepository.existsByPhone(it)) {
-                error.add(
-                    "Phone: ${user.phone?.countryCode}" +
-                            "${user.phone?.areaCode}" +
-                            "${user.phone?.number} already use"
-                )
-            }
+        when {
+            userRepository.existsByPersonId(user.personId) -> error.add("$PERSON_ID_ERROR_MESSAGE ${user.personId}")
+            userRepository.existsByEmail(user.email) -> error.add("$EMAIL_ERROR_MESSAGE ${user.email}")
+            userRepository.existsByPhone(user.phone) -> error.add("$PHONE_ERROR_MESSAGE ${user.phone}")
         }
 
-        if (error.isNotEmpty()) {
-            throw DataValidationException(error)
-        }
+        if (error.isNotEmpty()) throw DataValidationException(error)
     }
 }

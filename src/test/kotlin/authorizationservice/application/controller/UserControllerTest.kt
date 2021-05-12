@@ -26,9 +26,8 @@ class UserControllerTest {
     @Test
     fun `given valid user request should return user and http status 201`() {
         val request = UserRequestFactory.sample()
-        val user = UserFactory.sample()
 
-        every { userService.create(request.toDomain()) } returns user
+        every { userService.create(request.toDomain()) } just runs
 
         val controller = userController.register(request, result)
 

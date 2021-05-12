@@ -17,6 +17,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
+private const val EMAIL_ERROR_MESSAGE = "The following email is already being used:"
+private const val PERSON_ID_ERROR_MESSAGE = "The following personId is already being used:"
+private const val PHONE_ERROR_MESSAGE = "The following phone is already being used:"
+
 class UserServiceTest {
     private lateinit var userRepository: UserRepository
     private lateinit var userService: UserService
@@ -45,7 +49,7 @@ class UserServiceTest {
     @Test
     fun `given a existing user email, should be return DataValidationException`() {
         val user = UserFactory.sample()
-        val error = listOf("Email: ${user.email} already use")
+        val error = listOf("$EMAIL_ERROR_MESSAGE ${user.email}")
 
         every { userRepository.existsByEmail(user.email) } returns true
 
@@ -57,9 +61,9 @@ class UserServiceTest {
     }
 
     @Test
-    fun `given a existing user person id , should be return DataValidationException`() {
+    fun `given a existing user person id, should be return DataValidationException`() {
         val user = UserFactory.sample()
-        val error = listOf("PersonId: ${user.personId} already use")
+        val error = listOf("$PERSON_ID_ERROR_MESSAGE ${user.personId}")
 
         every { userRepository.existsByPersonId(user.personId) } returns true
 
@@ -73,11 +77,7 @@ class UserServiceTest {
     @Test
     fun `given a existing phone, should be return DataValidationException`() {
         val user = UserFactory.sample()
-        val error = listOf(
-            "Phone: ${user.phone?.countryCode}" +
-                    "${user.phone?.areaCode}" +
-                    "${user.phone?.number} already use"
-        )
+        val error = listOf("$PHONE_ERROR_MESSAGE ${user.phone}")
 
         every {
             userRepository.existsByPhone(user.phone)

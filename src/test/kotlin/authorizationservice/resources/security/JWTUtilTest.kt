@@ -41,11 +41,8 @@ class JWTUtilTest {
 
     @Test
     fun `given a token when is invalid, should be return false`() {
-        val personId =  "7568"
 
-        every { userRepository.existsByPersonId(personId) } returns false
-
-        val token = jwtUtil.generateToken(personId)
+        val token = jwtUtil.generateToken(null)
 
         Assertions.assertFalse(jwtUtil.validToken(token))
     }

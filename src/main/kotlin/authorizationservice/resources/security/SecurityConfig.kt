@@ -5,6 +5,7 @@ import authorizationservice.domain.repositories.UserRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -34,8 +35,8 @@ class SecurityConfig(
     override fun configure(http: HttpSecurity) {
         http.cors().and().csrf().disable()
         http.authorizeRequests()
-//            .antMatchers(HttpMethod.POST, *MATCHERS).hasRole(ROLE_ADMIN)
-//            .antMatchers(HttpMethod.DELETE, *DELETE_MATCHERS).hasRole(ROLE_USER)
+            .antMatchers(HttpMethod.POST, *MATCHERS).hasRole("ADMIN")
+            .antMatchers(HttpMethod.DELETE, *MATCHERS).hasRole("USER")
             .anyRequest().authenticated()
         http.addFilter(
             AuthenticationFilter(
@@ -71,10 +72,6 @@ class SecurityConfig(
 
     companion object {
         private val MATCHERS = arrayOf(
-            "/users"
-        )
-
-        private val DELETE_MATCHERS = arrayOf(
             "/users"
         )
     }

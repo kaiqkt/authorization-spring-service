@@ -14,15 +14,14 @@ class JWTUtilTest {
     @BeforeEach
     fun beforeEach() {
         userRepository = mockk(relaxed = true)
-        jwtUtil = JWTUtil("test", "60000", userRepository)
+        jwtUtil = JWTUtil("test", "60000")
     }
 
     @Test
     fun `given a person id, should be generate token with success`() {
         val personId =  "7568"
-        val email = "test@test.com"
 
-        val token = jwtUtil.generateToken(personId, email)
+        val token = jwtUtil.generateToken(personId)
 
         Assertions.assertEquals(personId, jwtUtil.getPersonId(token))
     }
@@ -35,7 +34,7 @@ class JWTUtilTest {
         every { userRepository.existsByPersonId(personId) } returns true
         every { userRepository.existsByEmail(email) } returns true
 
-        val token = jwtUtil.generateToken(personId, email)
+        val token = jwtUtil.generateToken(personId)
 
         Assertions.assertTrue(jwtUtil.validToken(token))
     }
@@ -43,11 +42,10 @@ class JWTUtilTest {
     @Test
     fun `given a token when is invalid, should be return false`() {
         val personId =  "7568"
-        val email = "test@test.com"
 
         every { userRepository.existsByPersonId(personId) } returns false
 
-        val token = jwtUtil.generateToken(personId, email)
+        val token = jwtUtil.generateToken(personId)
 
         Assertions.assertFalse(jwtUtil.validToken(token))
     }

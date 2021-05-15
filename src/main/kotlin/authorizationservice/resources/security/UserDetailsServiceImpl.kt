@@ -1,7 +1,6 @@
 package authorizationservice.resources.security
 
 import authorizationservice.domain.repositories.UserRepository
-import authorizationservice.resources.security.UserDetailsImpl
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException

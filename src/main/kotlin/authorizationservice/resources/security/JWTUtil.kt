@@ -1,6 +1,5 @@
 package authorizationservice.resources.security
 
-import authorizationservice.domain.repositories.UserRepository
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
@@ -11,14 +10,12 @@ import java.util.*
 @Component
 class JWTUtil(
     @Value("\${jwt.secret}") private var secret: String,
-    @Value("\${jwt.expiration}") private var expiration: String,
-    private val userRepository: UserRepository
+    @Value("\${jwt.expiration}") private var expiration: String
 ) {
 
-    fun generateToken(personId: String?, email: String?): String {
+    fun generateToken(personId: String?): String {
         return Jwts.builder()
             .setId(personId)
-            .setSubject(email)
             .setExpiration(Date(System.currentTimeMillis() + expiration.toLong()))
             .signWith(SignatureAlgorithm.HS512, secret.toByteArray())
             .compact()
@@ -28,10 +25,9 @@ class JWTUtil(
         val claims = getClaims(token)
         if (claims != null) {
             val personId = claims.id
-            val email = claims.subject
             val expirationDate = claims.expiration
             val now = Date(System.currentTimeMillis())
-            return personId != null && expirationDate != null && now.before(expirationDate) && userRepository.existsByPersonId(personId) && userRepository.existsByEmail(email)
+            return personId != null && expirationDate != null && now.before(expirationDate)
         }
         return false
     }

@@ -4,9 +4,7 @@ import authorizationservice.domain.entities.User
 import authorizationservice.domain.exceptions.DataValidationException
 import authorizationservice.domain.repositories.RedisSessionRepository
 import authorizationservice.domain.repositories.UserRepository
-import authorizationservice.resources.security.JWTUtil
 import authorizationservice.resources.security.UserDetailsImpl
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder

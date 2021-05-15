@@ -5,16 +5,11 @@ import authorizationservice.domain.repositories.RedisSessionRepository
 import authorizationservice.domain.repositories.UserRepository
 import authorizationservice.domain.services.UserService
 import authorizationservice.factories.UserFactory
-import authorizationservice.resources.security.UserDetailsImpl
 import io.mockk.*
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 private const val EMAIL_ERROR_MESSAGE = "The following email is already being used:"

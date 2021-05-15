@@ -2,7 +2,6 @@ package authorizationservice.resources.security
 
 import authorizationservice.domain.repositories.RedisSessionRepository
 import authorizationservice.domain.repositories.UserRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -21,32 +20,23 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig : WebSecurityConfigurerAdapter() {
-    @Autowired
-    private lateinit var userDetailsService: UserDetailsService
-
-    @Autowired
-    private lateinit var jwtUtil: JWTUtil
-
-    @Autowired
-    private lateinit var userRepository: UserRepository
-
-    @Autowired
-    private lateinit var redisSessionRepository: RedisSessionRepository
-
+class SecurityConfig(
+    private val userDetailsService: UserDetailsService,
+    private val jwtUtil: JWTUtil,
+    private val userRepository: UserRepository,
+    private val redisSessionRepository: RedisSessionRepository,
     @Value("\${token}")
-    private lateinit var secret: String
-
+    private var secret: String,
     @Value("\${redis.expiration}")
-    private lateinit var expiration: String
-
+    private var expiration: String
+) : WebSecurityConfigurerAdapter() {
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         http.cors().and().csrf().disable()
         http.authorizeRequests()
-            .antMatchers(HttpMethod.POST, *POST_MATCHERS).hasRole("ADM")
-            .antMatchers(HttpMethod.DELETE, *DELETE_MATCHERS).hasRole("USER")
+            .antMatchers(HttpMethod.POST, *MATCHERS).hasRole("ADMIN")
+            .antMatchers(HttpMethod.DELETE, *MATCHERS).hasRole("USER")
             .anyRequest().authenticated()
         http.addFilter(
             AuthenticationFilter(
@@ -81,11 +71,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     }
 
     companion object {
-        private val POST_MATCHERS = arrayOf(
-            "/users"
-        )
-
-        private val DELETE_MATCHERS = arrayOf(
+        private val MATCHERS = arrayOf(
             "/users"
         )
     }

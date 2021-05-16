@@ -8,6 +8,7 @@ import authorizationservice.domain.exceptions.LoginException
 import authorizationservice.domain.repositories.RedisSessionRepository
 import authorizationservice.domain.repositories.UserRepository
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.slf4j.LoggerFactory
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -23,7 +24,8 @@ import javax.servlet.ServletException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-private const val FAILURE_HANDLER = "{\n" + "\"status\": \"401\",\n" +" \"error\": \"Unauthorized\",\n" + "\"message\": \"Email or password wrong\"\n" + "}"
+private const val FAILURE_HANDLER =
+    "{\n" + "\"status\": \"401\",\n" + " \"error\": \"Unauthorized\",\n" + "\"message\": \"Email or password wrong\"\n" + "}"
 
 class AuthenticationFilter(
     jwtUtil: JWTUtil,
@@ -67,6 +69,8 @@ class AuthenticationFilter(
         val token = jwtUtil.generateToken(user?.personId)
 
         sessionDetails(request, token, user)
+
+        logger.info("Successfully authenticated [user: ${user?._id}]")
 
         response.contentType = CONTENT_TYPE
         response.addHeader(AUTHORIZATION_HEADER, "$BEARER_HEADER$token")

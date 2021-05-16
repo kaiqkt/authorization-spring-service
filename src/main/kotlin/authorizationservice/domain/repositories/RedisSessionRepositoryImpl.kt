@@ -19,17 +19,17 @@ class RedisSessionRepositoryImpl(
 
     private var hashOperations: HashOperations<String, String, AuthSession> = redisTemplate.opsForHash()
 
-    private companion object {
-        val logger: Logger = LoggerFactory.getLogger(RedisSessionRepositoryImpl::class.java)
-    }
+    private val logger = LoggerFactory.getLogger(javaClass)
 
     override fun createSession(auth: AuthSession) {
         val expiration = auth.expiration
         try {
             hashOperations.put(key, auth.userId!!, auth)
             redisTemplate.expire(key, expiration, TimeUnit.HOURS)
+
+            logger.info("Created user session [user: ${auth.userId}]")
         } catch (ex: Exception) {
-            logger.error("Create session error [key:$key]")
+            logger.error("Error creating user session [user: ${auth.userId}]")
             throw SessionException(ex.message)
         }
     }
@@ -46,8 +46,10 @@ class RedisSessionRepositoryImpl(
     override fun deleteSession(userId: String?) {
         try {
             hashOperations.delete(key, userId)
+
+            logger.info("Deleted user session [user: $userId]")
         } catch (ex: Exception) {
-            logger.error("Delete session error [key:$key]")
+            logger.error("Error when deleting user session [user: $userId]")
             throw SessionException(ex.message)
         }
     }

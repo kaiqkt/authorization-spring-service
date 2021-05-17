@@ -6,8 +6,9 @@ spring:
 ---
 token: 123SINGLE56
 
-jwt.secret: mysecret
-jwt.expiration: 7200000
+jwt:
+  secret: mysecret
+  expiration: 7200000
 
 spring:
   profiles: prod

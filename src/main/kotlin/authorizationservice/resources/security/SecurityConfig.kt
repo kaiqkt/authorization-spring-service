@@ -35,8 +35,9 @@ class SecurityConfig(
     override fun configure(http: HttpSecurity) {
         http.cors().and().csrf().disable()
         http.authorizeRequests()
-            .antMatchers(HttpMethod.POST, *MATCHERS).hasRole("ADMIN")
-            .antMatchers(HttpMethod.DELETE, *MATCHERS).hasRole("USER")
+            .antMatchers(HttpMethod.POST, *POST_MATCHERS).hasRole("ADMIN")
+            .antMatchers(HttpMethod.GET, *GET_MATCHERS).hasRole("ADMIN")
+            .antMatchers(HttpMethod.DELETE, *DELETE_MATCHERS).hasRole("USER")
             .anyRequest().authenticated()
         http.addFilter(
             AuthenticationFilter(
@@ -71,8 +72,16 @@ class SecurityConfig(
     }
 
     companion object {
-        private val MATCHERS = arrayOf(
+        private val POST_MATCHERS = arrayOf(
             "/users"
+        )
+
+        private val DELETE_MATCHERS = arrayOf(
+            "/users"
+        )
+
+        private val GET_MATCHERS = arrayOf(
+            "/healtcheck"
         )
     }
 }

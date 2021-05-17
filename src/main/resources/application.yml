@@ -1,7 +1,9 @@
 spring:
   profiles:
     active:
-    - prod
+    - test
+
+api.version: @project.version@
 
 ---
 token: 123SINGLE56

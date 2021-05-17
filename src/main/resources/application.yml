@@ -1,7 +1,7 @@
 spring:
   profiles:
     active:
-    - test
+    - prod
 
 api.version: @project.version@
 

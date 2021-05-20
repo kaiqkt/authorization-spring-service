@@ -1,5 +1,10 @@
 package authorizationservice.resources.security
 
+import authorizationservice.domain.AUTHORIZATION_HEADER
+import authorizationservice.domain.BEARER_HEADER
+import authorizationservice.domain.ROLE_ADMIN
+import authorizationservice.domain.ROLE_USER
+import authorizationservice.domain.repositories.UserRepository
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
@@ -17,6 +22,7 @@ private const val TOKEN_SERVICE_NAME = "auth_service"
 
 class AuthorizationFilter(
     authenticationManager: AuthenticationManager?,
+    private val userRepository: UserRepository,
     private val jwtUtil: JWTUtil,
     private val userDetailsService: UserDetailsService,
     private val secret: String
@@ -41,12 +47,13 @@ class AuthorizationFilter(
 
     private fun getJWTAuthentication(token: String): UsernamePasswordAuthenticationToken? {
         if (jwtUtil.validToken(token)) {
-            val username = jwtUtil.getUsername(token)
-            val user = userDetailsService.loadUserByUsername(username)
+            val personId = jwtUtil.getPersonId(token)
+            val user = userRepository.findByPersonId(personId)
+            val userDetails = userDetailsService.loadUserByUsername(user?.email)
 
-            logger.info("Validated token for the [user: ${user.username}]")
+            logger.info("Validated token for the [user: ${user?._id}]")
             return UsernamePasswordAuthenticationToken(
-                user,
+                userDetails,
                 null,
                 listOf<GrantedAuthority>(SimpleGrantedAuthority(ROLE_USER))
             )

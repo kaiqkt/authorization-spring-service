@@ -1,6 +1,7 @@
 package authorizationservice.application.handler
 
 import authorizationservice.domain.exceptions.*
+import com.maxmind.geoip2.exception.GeoIp2Exception
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -80,5 +81,4 @@ class ErrorHandler : ResponseEntityExceptionHandler() {
         body["message"] = ex.message!!
         return ResponseEntity(body, HttpStatus.BAD_REQUEST)
     }
-
 }

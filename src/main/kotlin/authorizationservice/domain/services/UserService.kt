@@ -2,7 +2,6 @@ package authorizationservice.domain.services
 
 import authorizationservice.domain.entities.User
 import authorizationservice.domain.exceptions.DataValidationException
-import authorizationservice.domain.repositories.RedisSessionRepository
 import authorizationservice.domain.repositories.UserRepository
 import authorizationservice.resources.security.UserDetailsImpl
 import org.slf4j.LoggerFactory
@@ -18,7 +17,6 @@ private const val PHONE_ERROR_MESSAGE = "The following phone is already being us
 @Service
 class UserService(
     private val userRepository: UserRepository,
-    private val redisSessionRepository: RedisSessionRepository,
     private val bCryptPasswordEncoder: BCryptPasswordEncoder
 ) {
 
@@ -34,17 +32,6 @@ class UserService(
         logger.info("User[${newUser._id}] created in the mongo database")
     }
 
-    fun deleteSession() = userRepository.findByEmail(authenticated()?.username).let {
-        redisSessionRepository.deleteSession(it?._id)
-    }
-
-    private fun authenticated(): UserDetailsImpl? {
-        return try {
-            SecurityContextHolder.getContext().authentication.principal as UserDetailsImpl
-        } catch (e: Exception) {
-            null
-        }
-    }
 
     private fun validateDate(user: User) {
         val error = mutableListOf<String>()

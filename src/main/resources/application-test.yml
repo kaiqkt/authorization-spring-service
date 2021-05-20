@@ -10,10 +10,3 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/authorization
-
-redis:
-  host: localhost
-  port: 6379
-  password:
-  key: session_user
-  expiration: 2

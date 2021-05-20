@@ -1,5 +1,9 @@
 package authorizationservice.resources.security
 
+import authorizationservice.domain.AUTHORIZATION_HEADER
+import authorizationservice.domain.BEARER_HEADER
+import authorizationservice.domain.ROLE_ADMIN
+import authorizationservice.domain.ROLE_USER
 import authorizationservice.domain.repositories.UserRepository
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken

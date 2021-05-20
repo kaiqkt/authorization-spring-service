@@ -2,7 +2,6 @@ package authorizationservice.application.controller
 
 import authorizationservice.application.dto.toDomain
 import authorizationservice.domain.services.UserService
-import authorizationservice.factories.UserFactory
 import authorizationservice.factories.UserRequestFactory
 import io.mockk.*
 import org.junit.jupiter.api.Assertions
@@ -33,16 +32,5 @@ class UserControllerTest {
 
         verify { userService.create(any()) }
         Assertions.assertEquals(HttpStatus.CREATED, controller.statusCode)
-    }
-
-    @Test
-    fun `given valid delete request should return http status 200`() {
-
-        every { userService.deleteSession() } just runs
-
-        val controller = userController.logout()
-
-        verify { userService.deleteSession() }
-        Assertions.assertEquals(HttpStatus.OK, controller.statusCode)
     }
 }

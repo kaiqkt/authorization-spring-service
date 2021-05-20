@@ -13,7 +13,7 @@ class DeviceAuthenticationConfig {
     @Throws(IOException::class)
     fun databaseReader(): DatabaseReader? {
         val database = ResourceUtils
-            .getFile("classpath:maxmind/GeoLite2-City.mmdb")
+            .getFile("target/classes/maxmind/GeoLite2-City.mmdb")
         return DatabaseReader.Builder(database)
             .build()
     }

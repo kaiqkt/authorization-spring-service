@@ -4,23 +4,20 @@ import authorizationservice.domain.CHANNEL_HEADER
 import authorizationservice.domain.FORWARDED_HEADER
 import authorizationservice.domain.USER_AGENT
 import authorizationservice.domain.entities.*
-import authorizationservice.domain.exceptions.SessionException
 import authorizationservice.domain.repositories.SessionRepository
-import com.google.common.base.Strings
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.maxmind.geoip2.DatabaseReader
 import com.maxmind.geoip2.exception.AddressNotFoundException
 import com.maxmind.geoip2.exception.GeoIp2Exception
 import com.maxmind.geoip2.model.CityResponse
+import nl.basjes.parse.useragent.UserAgentAnalyzer
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.mail.SimpleMailMessage
 import org.springframework.stereotype.Service
-import ua_parser.Client
-import ua_parser.Parser
 import java.io.IOException
 import java.net.InetAddress
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
 import javax.servlet.http.HttpServletRequest
 
 private const val UNKNOWN = "UNKNOWN"
@@ -30,11 +27,12 @@ private val DATE_PARSE = LocalDateTime.now().format(FORMATTER)
 @Service
 class SessionService(
     private val sessionRepository: SessionRepository,
-    private val userAgentParser: Parser,
+    private val uaParser: UserAgentAnalyzer,
     @Qualifier("GeoIPCity")
     private val dbReader: DatabaseReader
 ) {
 
+    private val logger = LoggerFactory.getLogger(javaClass)
 
     fun newSession(request: HttpServletRequest, user: User?) {
         val ip = request.getHeader(FORWARDED_HEADER) ?: request.remoteAddr
@@ -58,10 +56,15 @@ class SessionService(
                 lastLogin = DATE_PARSE
             )
 
-            sessionRepository.save(session)
+            sessionRepository.save(session).also {
+
+                logger.info("New session created for user: ${it.userId}")
+            }
         } else {
             device.lastLogin = DATE_PARSE
             sessionRepository.save(device)
+
+            logger.info("Updated last login for session: ${device._id}]")
         }
     }
 
@@ -72,14 +75,18 @@ class SessionService(
         var location: String = UNKNOWN
         val ipAddress = InetAddress.getByName(ip)
 
+        logger.info("Attempt to get location")
+
         try {
             val cityResponse: CityResponse = dbReader.city(ipAddress)
 
             if (cityResponse.city != null && !cityResponse.city.name.isNullOrEmpty()) {
                 location = cityResponse.city.name
+                logger.info("Location get with success")
             }
         } catch (ex: AddressNotFoundException) {
             location = UNKNOWN
+            logger.info("Failed to get location")
         }
 
         return location
@@ -97,13 +104,9 @@ class SessionService(
     }
 
     private fun getDeviceDetails(userAgent: String): DeviceDetails {
-        val client: Client = userAgentParser.parse(userAgent)
+        val ua = uaParser.parse(userAgent)
 
-        return DeviceDetails(
-            device = client.device.family,
-            userAgent = "${client.userAgent.family} ${client.userAgent.major} ${client.userAgent.minor}",
-            operationSystem = "${client.os.family} ${client.os.major} ${client.os.minor}"
-        )
+        return ObjectMapper().readValue(ua.toJson(), DeviceDetails::class.java)
     }
 // create notification for unknow device
 //    private fun unknownDeviceNotification() {

@@ -1,11 +1,12 @@
 package authorizationservice.resources.security.config
 
 import com.maxmind.geoip2.DatabaseReader
+import nl.basjes.parse.useragent.UserAgentAnalyzer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.util.ResourceUtils
-import ua_parser.Parser
 import java.io.IOException
+
 
 @Configuration
 class DeviceAuthenticationConfig {
@@ -19,8 +20,11 @@ class DeviceAuthenticationConfig {
     }
 
     @Bean
-    @Throws(IOException::class)
-    fun uaParser(): Parser? {
-        return Parser()
+    fun uaParser(): UserAgentAnalyzer {
+        return UserAgentAnalyzer
+            .newBuilder()
+            .hideMatcherLoadStats()
+            .withCache(10000)
+            .build()
     }
 }

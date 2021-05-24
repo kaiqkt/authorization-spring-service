@@ -12,11 +12,7 @@ object SessionFactory {
         userId = ULID.random(),
         deviceMetadata = DeviceMetadata(
             ip = "8.211.173.158",
-            deviceDetails = DeviceDetails(
-                device = "Iphone",
-                userAgent = "Mozilla 5 1",
-                operationSystem = "IOS 5 1"
-            ),
+            deviceDetails = DeviceDetails(),
             location = "UNKNOWN",
             channel = Channel.APP_MOBILE
         ),

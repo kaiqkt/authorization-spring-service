@@ -20,9 +20,9 @@
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>com.github.ua-parser</groupId>
-			<artifactId>uap-java</artifactId>
-			<version>1.4.0</version>
+			<groupId>nl.basjes.parse.useragent</groupId>
+			<artifactId>yauaa</artifactId>
+			<version>5.23</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>

@@ -3,7 +3,7 @@ package authorizationservice.domain
 const val CONTENT_TYPE = "application/json"
 const val AUTHORIZATION_HEADER = "Authorization"
 const val EXPOSE_AUTHORIZATION_HEADER = "access-control-expose-headers"
-const val SESSION_HEADER = "Session"
+const val SESSION_HEADER = "SessionId"
 const val USER_AGENT = "User-Agent"
 const val BEARER_HEADER = "Bearer "
 const val CHANNEL_HEADER = "Channel"

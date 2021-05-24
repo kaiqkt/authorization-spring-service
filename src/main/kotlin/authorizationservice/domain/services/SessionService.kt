@@ -34,7 +34,7 @@ class SessionService(
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    fun newSession(request: HttpServletRequest, user: User?) {
+    fun newSession(request: HttpServletRequest, user: User?): String {
         val ip = request.getHeader(FORWARDED_HEADER) ?: request.remoteAddr
         val location = getLocation(ip)
         val deviceDetails = getDeviceDetails(request.getHeader(USER_AGENT))
@@ -57,18 +57,21 @@ class SessionService(
             )
 
             sessionRepository.save(session).also {
-
                 logger.info("New session created for user: ${it.userId}")
+                return it._id
             }
         } else {
             device.lastLogin = DATE_PARSE
-            sessionRepository.save(device)
-
-            logger.info("Updated last login for session: ${device._id}]")
+            sessionRepository.save(device).also {
+                logger.info("Updated last login for session: ${it._id}]")
+                return it._id
+            }
         }
     }
 
-//    fun deleteSession(userId: String) = sessionRepository.deleteByUserId(userId)
+    fun deleteSession(sessionId: String) = sessionRepository.deleteById(sessionId).also {
+        logger.info("Deleted [session: ${sessionId}]")
+    }
 
     @Throws(IOException::class, GeoIp2Exception::class)
     private fun getLocation(ip: String): String {

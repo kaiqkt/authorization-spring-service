@@ -54,13 +54,14 @@ class AuthenticationFilter(
         val user = userRepository.findByEmail(username)
         val token = jwtUtil.generateToken(user?.personId)
 
-        sessionService.newSession(request, user)
+        val sessionId = sessionService.newSession(request, user)
 
         logger.info("Successfully authenticated [user: ${user?._id}]")
 
         response.contentType = CONTENT_TYPE
         response.addHeader(AUTHORIZATION_HEADER, "$BEARER_HEADER$token")
         response.addHeader(EXPOSE_AUTHORIZATION_HEADER, AUTHORIZATION_HEADER)
+        response.addHeader(SESSION_HEADER, sessionId)
     }
 
     init {

@@ -37,7 +37,6 @@ class UserService(
         val error = mutableListOf<String>()
 
         when {
-            userRepository.existsByPersonId(user.personId) -> error.add("$PERSON_ID_ERROR_MESSAGE ${user.personId}")
             userRepository.existsByEmail(user.email) -> error.add("$EMAIL_ERROR_MESSAGE ${user.email}")
             userRepository.existsByPhone(user.phone) -> error.add("$PHONE_ERROR_MESSAGE ${user.phone}")
         }

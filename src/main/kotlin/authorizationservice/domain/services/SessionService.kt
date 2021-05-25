@@ -73,6 +73,8 @@ class SessionService(
         logger.info("Deleted [session: ${sessionId}]")
     }
 
+    fun findSessions(userId: String?): List<Session>? = sessionRepository.findByUserId(userId)
+
     @Throws(IOException::class, GeoIp2Exception::class)
     private fun getLocation(ip: String): String {
         var location: String = UNKNOWN

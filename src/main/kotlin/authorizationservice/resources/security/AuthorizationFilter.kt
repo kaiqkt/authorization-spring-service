@@ -47,16 +47,18 @@ class AuthorizationFilter(
 
     private fun getJWTAuthentication(token: String): UsernamePasswordAuthenticationToken? {
         if (jwtUtil.validToken(token)) {
-            val personId = jwtUtil.getPersonId(token)
-            val user = userRepository.findByPersonId(personId)
-            val userDetails = userDetailsService.loadUserByUsername(user?.email)
+            jwtUtil.getUserId(token)?.let {
+                val user = userRepository.findById(it).get()
+                val userDetails = userDetailsService.loadUserByUsername(user.email)
 
-            logger.info("Validated token for the [user: ${user?._id}]")
-            return UsernamePasswordAuthenticationToken(
-                userDetails,
-                null,
-                listOf<GrantedAuthority>(SimpleGrantedAuthority(ROLE_USER))
-            )
+                logger.info("Validated token for the [user: ${user._id}]")
+                return UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    null,
+                    listOf<GrantedAuthority>(SimpleGrantedAuthority(ROLE_USER))
+                )
+            }
+            return null
         }
         return null
     }

@@ -8,7 +8,6 @@ import java.time.LocalDateTime
 data class User(
     @Id
     val _id: String = ULID.random(),
-    val personId: String,
     val email: String,
     @JsonIgnore
     var password: String,

@@ -111,7 +111,31 @@ class SessionService(
     private fun getDeviceDetails(userAgent: String): DeviceDetails {
         val ua = uaParser.parse(userAgent)
 
-        return ObjectMapper().readValue(ua.toJson(), DeviceDetails::class.java)
+        return DeviceDetails(
+            userAgent =  ua.getValue("Useragent"),
+            deviceClass =  ua.getValue("DeviceClass"),
+            deviceName =  ua.getValue("DeviceName"),
+            deviceBrand  =  ua.getValue("DeviceBrand"),
+            operatingSystemClass =  ua.getValue("OperatingSystemClass"),
+            operatingSystemName =  ua.getValue("OperatingSystemName"),
+            operatingSystemVersion =  ua.getValue("OperatingSystemVersion"),
+            operatingSystemVersionMajor =  ua.getValue("OperatingSystemVersionMajor"),
+            operatingSystemNameVersion =  ua.getValue("OperatingSystemNameVersion"),
+            operatingSystemNameVersionMajor =  ua.getValue("OperatingSystemNameVersionMajor"),
+            operatingSystemVersionBuild =  ua.getValue("OperatingSystemVersionBuild"),
+            layoutEngineClass =  ua.getValue("LayoutEngineClass"),
+            layoutEngineName =  ua.getValue("LayoutEngineName"),
+            layoutEngineVersion =  ua.getValue("LayoutEngineVersion"),
+            layoutEngineVersionMajor =  ua.getValue("LayoutEngineVersionMajor"),
+            layoutEngineNameVersion =  ua.getValue("LayoutEngineNameVersion"),
+            layoutEngineNameVersionMajor =  ua.getValue("LayoutEngineNameVersionMajor"),
+            agentClass =  ua.getValue("AgentClass"),
+            agentName =  ua.getValue("AgentName"),
+            agentVersion =  ua.getValue("AgentVersion"),
+            agentVersionMajor =  ua.getValue("AgentVersionMajor"),
+            agentNameVersion =  ua.getValue("AgentNameVersion"),
+            agentNameVersionMajor =  ua.getValue("AgentNameVersionMajor"),
+        )
     }
 // create notification for unknow device
 //    private fun unknownDeviceNotification() {

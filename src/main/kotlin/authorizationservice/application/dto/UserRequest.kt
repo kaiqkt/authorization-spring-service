@@ -7,8 +7,6 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 
 data class UserRequest(
-    @get:NotEmpty(message = "PersonId cannot be empty.")
-    val personId: String = "",
     @get:NotEmpty(message = "Email cannot be empty.")
     val email: String = "",
     @get:NotEmpty(message = "Password cannot be empty.")
@@ -20,7 +18,6 @@ data class UserRequest(
 )
 
 fun UserRequest.toDomain() = User(
-    personId = this.personId,
     email = this.email,
     password = this.password,
     phone = this.phone.toDomain()

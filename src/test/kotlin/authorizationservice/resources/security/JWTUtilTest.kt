@@ -23,7 +23,7 @@ class JWTUtilTest {
 
         val token = jwtUtil.generateToken(personId)
 
-        Assertions.assertEquals(personId, jwtUtil.getPersonId(token))
+        Assertions.assertEquals(personId, jwtUtil.getUserId(token))
     }
 
     @Test
@@ -31,7 +31,6 @@ class JWTUtilTest {
         val personId =  "7568"
         val email = "test@test.com"
 
-        every { userRepository.existsByPersonId(personId) } returns true
         every { userRepository.existsByEmail(email) } returns true
 
         val token = jwtUtil.generateToken(personId)

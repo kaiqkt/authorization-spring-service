@@ -52,7 +52,7 @@ class AuthenticationFilter(
         val username: String = (authResult.principal as UserDetailsImpl).username
 
         val user = userRepository.findByEmail(username)
-        val token = jwtUtil.generateToken(user?.personId)
+        val token = jwtUtil.generateToken(user?._id)
 
         val sessionId = sessionService.newSession(request, user)
 

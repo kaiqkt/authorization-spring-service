@@ -13,9 +13,9 @@ class JWTUtil(
     @Value("\${jwt.expiration}") private var expiration: String
 ) {
 
-    fun generateToken(personId: String?): String {
+    fun generateToken(userId: String?): String {
         return Jwts.builder()
-            .setId(personId)
+            .setId(userId)
             .setExpiration(Date(System.currentTimeMillis() + expiration.toLong()))
             .signWith(SignatureAlgorithm.HS512, secret.toByteArray())
             .compact()
@@ -32,7 +32,7 @@ class JWTUtil(
         return false
     }
 
-    fun getPersonId(token: String): String? {
+    fun getUserId(token: String): String? {
         val claims = getClaims(token)
         return claims?.id
     }

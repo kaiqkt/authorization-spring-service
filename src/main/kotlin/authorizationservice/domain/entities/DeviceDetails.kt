@@ -12,6 +12,8 @@ data class DeviceDetails(
     var deviceName: String? = null,
     @JsonProperty("DeviceBrand")
     var deviceBrand: String? = null,
+    @JsonProperty("DeviceCpu")
+    var deviceCpu: String? = null,
     @JsonProperty("OperatingSystemClass")
     var operatingSystemClass: String? = null,
     @JsonProperty("OperatingSystemName")

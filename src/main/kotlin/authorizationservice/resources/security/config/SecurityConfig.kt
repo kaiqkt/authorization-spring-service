@@ -48,7 +48,7 @@ class SecurityConfig(
                 sessionService
             )
         )
-        http.addFilter(AuthorizationFilter(authenticationManager(), userRepository, jwtUtil, userDetailsService, secret))
+        http.addFilter(AuthorizationFilter(authenticationManager(), userRepository, jwtUtil, userDetailsService, secret, sessionService))
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     }
 

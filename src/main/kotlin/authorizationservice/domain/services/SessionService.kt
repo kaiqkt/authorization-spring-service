@@ -75,6 +75,17 @@ class SessionService(
 
     fun findSessions(userId: String?): List<Session>? = sessionRepository.findByUserId(userId)
 
+    fun existsDevice(request: HttpServletRequest, userId: String?): Boolean {
+        val ip = request.getHeader(FORWARDED_HEADER) ?: request.remoteAddr
+        val location = getLocation(ip)
+        val deviceDetails = getDeviceDetails(request.getHeader(USER_AGENT))
+
+        findExistingDevice(userId, deviceDetails, location)?.let {
+            return true
+        }
+        return false
+    }
+
     @Throws(IOException::class, GeoIp2Exception::class)
     private fun getLocation(ip: String): String {
         var location: String = UNKNOWN

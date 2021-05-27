@@ -5,6 +5,7 @@ import authorizationservice.domain.BEARER_HEADER
 import authorizationservice.domain.ROLE_ADMIN
 import authorizationservice.domain.ROLE_USER
 import authorizationservice.domain.repositories.UserRepository
+import authorizationservice.domain.services.SessionService
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
@@ -25,7 +26,8 @@ class AuthorizationFilter(
     private val userRepository: UserRepository,
     private val jwtUtil: JWTUtil,
     private val userDetailsService: UserDetailsService,
-    private val secret: String
+    private val secret: String,
+    private val sessionService: SessionService
 ) : BasicAuthenticationFilter(authenticationManager) {
 
     @Throws(IOException::class, ServletException::class)
@@ -33,7 +35,7 @@ class AuthorizationFilter(
         val header = request.getHeader(AUTHORIZATION_HEADER)
         header?.let {
             val auth = if (it.startsWith(BEARER_HEADER)) {
-                getJWTAuthentication(header.substring(7))
+                getJWTAuthentication(request, header.substring(7))
             } else {
                 getAuthentication(header)
             }
@@ -45,9 +47,10 @@ class AuthorizationFilter(
         chain.doFilter(request, response)
     }
 
-    private fun getJWTAuthentication(token: String): UsernamePasswordAuthenticationToken? {
-        if (jwtUtil.validToken(token)) {
-            jwtUtil.getUserId(token)?.let {
+    private fun getJWTAuthentication(request: HttpServletRequest, token: String): UsernamePasswordAuthenticationToken? {
+        val userId = jwtUtil.getUserId(token)
+        if (jwtUtil.validToken(token) && sessionService.existsDevice(request, userId)) {
+            userId?.let {
                 val user = userRepository.findById(it).get()
                 val userDetails = userDetailsService.loadUserByUsername(user.email)
 

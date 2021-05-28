@@ -75,7 +75,7 @@ class SessionService(
 
     fun findSessions(userId: String?): List<Session>? = sessionRepository.findByUserId(userId)
 
-    fun existsDevice(request: HttpServletRequest, userId: String?): Boolean {
+    fun     existsDevice(request: HttpServletRequest, userId: String?): Boolean {
         val ip = request.getHeader(FORWARDED_HEADER) ?: request.remoteAddr
         val location = getLocation(ip)
         val deviceDetails = getDeviceDetails(request.getHeader(USER_AGENT))

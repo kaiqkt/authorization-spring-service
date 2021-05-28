@@ -1,6 +1,7 @@
 package authorizationservice.application.controller
 
 import authorizationservice.application.dto.toDomain
+import authorizationservice.domain.services.PasswordService
 import authorizationservice.domain.services.UserService
 import authorizationservice.factories.UserRequestFactory
 import io.mockk.*
@@ -12,13 +13,15 @@ import org.springframework.validation.BindingResult
 
 class UserControllerTest {
     private lateinit var userService: UserService
+    private lateinit var passwordService: PasswordService
     private lateinit var userController: UserController
     private lateinit var result: BindingResult
 
     @BeforeEach
     fun beforeEach() {
         userService =  mockk(relaxed = true)
-        userController = UserController(userService)
+        passwordService =  mockk(relaxed = true)
+        userController = UserController(userService, passwordService)
         result = mockk(relaxed = true)
     }
 

@@ -81,4 +81,17 @@ class ErrorHandler : ResponseEntityExceptionHandler() {
         body["message"] = ex.message!!
         return ResponseEntity(body, HttpStatus.BAD_REQUEST)
     }
+
+    @ExceptionHandler(PasswordException::class)
+    fun handlePasswordException(
+        ex: PasswordException, request: WebRequest
+    ): ResponseEntity<Any> {
+        val uri: List<String> = request.getDescription(true).split(";")
+        logger.error("password exception error: $uri")
+
+        val body: MutableMap<String, Any> = LinkedHashMap()
+        body["timestamp"] = LocalDateTime.now()
+        body["message"] = ex.message!!
+        return ResponseEntity(body, HttpStatus.BAD_REQUEST)
+    }
 }

@@ -1,4 +1,4 @@
-package authorizationservice.resources.security.config
+package authorizationservice.resources.config
 
 import com.maxmind.geoip2.DatabaseReader
 import nl.basjes.parse.useragent.UserAgentAnalyzer

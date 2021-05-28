@@ -1,29 +1,29 @@
 package authorizationservice.domain.services
 
 import authorizationservice.domain.entities.ResetPassword
-import authorizationservice.domain.exceptions.ExpiredResetPasswordException
 import authorizationservice.domain.repositories.PasswordRepository
 import authorizationservice.domain.repositories.UserRepository
+import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
 class PasswordService(
-    private val passwordRepository: PasswordRepository,
     private val userRepository: UserRepository,
-    private val bCryptPasswordEncoder: BCryptPasswordEncoder
+    private val bCryptPasswordEncoder: BCryptPasswordEncoder,
+    private val passwordRepository: PasswordRepository
 ) {
 
-    private val expirationTime: Long = 600000
+    private val logger = LoggerFactory.getLogger(javaClass)
 
     fun generateToken(email: String) {
         userRepository.findByEmail(email)?.let {
             val resetPassword = ResetPassword(
                 token = UUID.randomUUID().toString().replace("-", ""),
-                userId = it._id,
-                expireTime = Date(System.currentTimeMillis() + expirationTime)
+                userId = it._id
             )
+            logger.info("Generated token for reset password to [user: ${it._id}]")
 
             passwordRepository.save(resetPassword)
 
@@ -33,17 +33,13 @@ class PasswordService(
     }
 
     fun changePassword(token: String, password: String) {
-        val resetPassword = passwordRepository.findByToken(token)
+        passwordRepository.find(token)?.let {
+            userRepository.findById(it.userId).get().let { user ->
+                user.password = bCryptPasswordEncoder.encode(password)
 
-        if (!resetPassword.isNotExpired){
-            throw ExpiredResetPasswordException("Reset token expired")
-        }
-
-        userRepository.findById(resetPassword.userId).get().let {
-            it.password = bCryptPasswordEncoder.encode(password)
-
-            userRepository.save(it)
-            passwordRepository.deleteAllByUserId(it._id)
+                userRepository.save(user)
+                passwordRepository.delete(token)
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-package authorizationservice.resources.security.config
+package authorizationservice.resources.config
 
 import authorizationservice.domain.repositories.UserRepository
 import authorizationservice.domain.services.SessionService

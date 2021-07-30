@@ -32,7 +32,6 @@ class UserService(
         logger.info("User[${newUser._id}] created in the mongo database")
     }
 
-
     private fun validateDate(user: User) {
         val error = mutableListOf<String>()
 

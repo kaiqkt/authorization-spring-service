@@ -11,16 +11,12 @@ data class UserRequest(
     val email: String = "",
     @get:NotEmpty(message = "Password cannot be empty.")
     @get:Pattern(regexp = "^(?=.*[A-Z].*[A-Z])(?=.*[!@#\$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}\$", message = "Wrong password required")
-    val password: String = "",
-    @get:NotNull(message = "Phone cannot be null.")
-    @get:Valid
-    val phone: PhoneRequest
+    val password: String = ""
 )
 
 fun UserRequest.toDomain() = User(
     email = this.email,
-    password = this.password,
-    phone = this.phone.toDomain()
+    password = this.password
 )
 
 //^                         Start anchor

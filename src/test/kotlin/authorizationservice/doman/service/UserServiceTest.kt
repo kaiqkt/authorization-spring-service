@@ -53,20 +53,4 @@ class UserServiceTest {
 
         Assertions.assertEquals(error, response.details())
     }
-
-    @Test
-    fun `given a existing phone, should be return DataValidationException`() {
-        val user = UserFactory.sample()
-        val error = listOf("$PHONE_ERROR_MESSAGE ${user.phone}")
-
-        every {
-            userRepository.existsByPhone(user.phone)
-        } returns true
-
-        val response = assertThrows<DataValidationException> {
-            userService.create(user)
-        }
-
-        Assertions.assertEquals(error, response.details())
-    }
 }

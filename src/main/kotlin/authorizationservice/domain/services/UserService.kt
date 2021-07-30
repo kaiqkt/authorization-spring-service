@@ -36,11 +36,8 @@ class UserService(
     private fun validateDate(user: User) {
         val error = mutableListOf<String>()
 
-        when {
-            userRepository.existsByEmail(user.email) -> error.add("$EMAIL_ERROR_MESSAGE ${user.email}")
-            userRepository.existsByPhone(user.phone) -> error.add("$PHONE_ERROR_MESSAGE ${user.phone}")
+        if (userRepository.existsByEmail(user.email)) {
+            throw DataValidationException(error)
         }
-
-        if (error.isNotEmpty()) throw DataValidationException(error)
     }
 }

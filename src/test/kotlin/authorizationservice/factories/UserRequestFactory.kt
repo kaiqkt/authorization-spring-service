@@ -6,8 +6,6 @@ object UserRequestFactory {
 
     fun sample() = UserRequest(
         email = "test@test.com",
-        password = "@Test255",
-        phone = PhoneRequestFactory.sample()
+        password = "@Test255"
     )
-
 }

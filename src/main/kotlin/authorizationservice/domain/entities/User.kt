@@ -11,6 +11,5 @@ data class User(
     val email: String,
     @JsonIgnore
     var password: String,
-    val phone: Phone?,
     var createdAt: LocalDateTime? = null
 )
